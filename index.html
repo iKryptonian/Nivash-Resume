@@ -3,9 +3,45 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <title>Nivash's Resume</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 </head>
-  <body style="width:100%; height:100%; margin:0;">
-    <!-- Embed PDF using Google Docs Viewer -->
-    <iframe src="https://docs.google.com/gview?url=https://raw.githubusercontent.com/iKryptonian/Nivash-resume/main/resume.pdf&embedded=true" style="width:100%; height:100%;" frameborder="0"></iframe>
-  </body>
+<body style="width:100%; height:100%; margin:0;">
+
+  <div id="pdf-viewer" style="width:100%; height:100%;"></div>
+
+  <script>
+    // URL of your raw PDF file
+    const pdfUrl = 'https://raw.githubusercontent.com/iKryptonian/Nivash-resume/main/resume.pdf';
+    
+    // PDF.js viewer function
+    const loadingTask = pdfjsLib.getDocument(pdfUrl);
+    loadingTask.promise.then(function(pdf) {
+      console.log('PDF loaded');
+      
+      // Get the first page
+      pdf.getPage(1).then(function(page) {
+        console.log('Page loaded');
+        
+        const scale = 1.5;
+        const viewport = page.getViewport({ scale: scale });
+        
+        // Prepare canvas element to render the PDF
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        document.getElementById('pdf-viewer').appendChild(canvas);
+        
+        // Render the page
+        page.render({
+          canvasContext: context,
+          viewport: viewport
+        });
+      });
+    }).catch(function(error) {
+      console.log(error);
+    });
+  </script>
+  
+</body>
 </html>
